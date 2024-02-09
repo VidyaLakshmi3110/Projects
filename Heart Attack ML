@@ -1,0 +1,419 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set(color_codes = 'deep')
+import scipy.stats as stats
+import statsmodels.api as sm
+from sklearn import metrics
+from sklearn.preprocessing import StandardScaler 
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import BernoulliNB
+from xgboost import XGBClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+#from sklearn.preprocessing import StandardScaler
+
+import warnings
+warnings.filterwarnings('ignore')
+Reading The Dataset
+
+heart=pd.read_csv('heart1.csv')
+heart.head()
+Checking the shape of DataFrame
+
+print('Number of rows are',heart.shape[0], 'and number of columns are ',heart.shape[1])
+Number of rows are 303 and number of columns are  14
+
+Checking for null values
+
+heart.isnull().sum()/len(heart)*100
+Checking For datatypes of the attributes
+
+heart.info()
+checking for duplicate rows
+
+heart[heart.duplicated()]
+Removing the duplicates
+
+heart.drop_duplicates(keep='first',inplace=True)
+​
+Checking new shape
+
+print('Number of rows are',heart.shape[0], 'and number of columns are ',heart.shape[1])
+Number of rows are 302 and number of columns are  14
+#checking statistical data
+
+heart.describe()
+Computing the correlation matrix
+
+heart.corr()
+
+Data Visualization
+Breakdown of gender
+
+x=(heart.sex.value_counts())
+print(f'Number of people having sex as 1 are {x[0]} and Number of people having sex as 0 are {x[1]}')
+p = sns.countplot(data=heart, x="sex")
+plt.show()
+Number of people having sex as 1 are 96 and Number of people having sex as 0 are 206
+People having gender as 0 are more than twice the people having gender as 1
+
+Breakdown for chest pain
+
+x=(heart.cp.value_counts())
+print(x)
+p = sns.countplot(data=heart, x="cp")
+plt.show()
+x=(heart.cp.value_counts())
+print(x)
+p = sns.countplot(data=heart, x="cp")
+plt.show()
+It can be observed people have chest pain of type 0 i.e 'Typical Angina' is the highest.
+It can be observed people have chest pain of type 3 i.e 'Asymptomatic' is the lowest
+It can also be observed people with chest pain of type 0 is almost 50% of all the people.
+Breakdown of FBS
+
+x=(heart.fbs.value_counts())
+print(x)
+p = sns.countplot(data=heart, x="fbs")
+plt.show()
+Breakdown of ECG
+
+x=(heart.restecg.value_counts())
+print(x)
+p = sns.countplot(data=heart, x="restecg")
+plt.show()
+ECG count is almost the same for type 0 and 1. Also, for type 2 its almost negligible in comparision to type 0 and 1.
+
+Breakdown for Exercise Induced Angina
+
+x=(heart.exng.value_counts())
+print(x)
+p = sns.countplot(data=heart, x="exng")
+plt.show()
+EXNG count is more than double for type 0
+
+Breakdown for Thalium Stress Test
+
+x=(heart.thall.value_counts())
+print(x)
+p = sns.countplot(data=heart, x="thall")
+plt.show()
+thall count is max for type 2 and min for type 0.
+
+Density distribution for Age
+
+plt.figure(figsize=(10,10))
+sns.displot(heart.age, color="red", label="Age", kde= True)
+plt.legend()
+Trtbs has the highest count around 130
+
+Heart Attack Vs Age
+
+plt.figure(figsize=(10,10))
+sns.distplot(heart[heart['output'] == 0]["age"], color='green',kde=True,) 
+sns.distplot(heart[heart['output'] == 1]["age"], color='red',kde=True)
+plt.title('Attack versus Age')
+plt.show()
+plt.figure(figsize=(10,10))
+sns.distplot(heart[heart['output'] == 0]["chol"], color='green',kde=True,) 
+sns.distplot(heart[heart['output'] == 1]["chol"], color='red',kde=True)
+plt.title('Cholestrol versus Age')
+plt.show()
+plt.figure(figsize=(10,10))
+sns.distplot(heart[heart['output'] == 0]["trtbps"], color='green',kde=True,) 
+sns.distplot(heart[heart['output'] == 1]["trtbps"], color='red',kde=True)
+plt.title('Trtbs versus Age')
+plt.show()
+plt.figure(figsize=(10,10))
+sns.distplot(heart[heart['output'] == 0]["thalachh"], color='green',kde=True,) 
+sns.distplot(heart[heart['output'] == 1]["thalachh"], color='red',kde=True)
+plt.title('Thalachh versus Age')
+plt.show()
+
+Pair Plot
+
+plt.figure(figsize=(20,20))
+sns.pairplot(heart)
+plt.show()
+plt.figure(figsize=(20,10))
+sns.heatmap(heart.corr(), annot=True, cmap='rainbow');
+Violin Plot
+
+plt.figure(figsize=(13,13))
+plt.subplot(2,3,1)
+sns.violinplot(x = 'sex', y = 'output', data = heart)
+plt.subplot(2,3,2)
+sns.violinplot(x = 'thall', y = 'output', data = heart)
+plt.subplot(2,3,3)
+sns.violinplot(x = 'exng', y = 'output', data = heart)
+plt.subplot(2,3,4)
+sns.violinplot(x = 'restecg', y = 'output', data = heart)
+plt.subplot(2,3,5)
+sns.violinplot(x = 'cp', y = 'output', data = heart)
+plt.xticks(fontsize=9, rotation=45)
+plt.subplot(2,3,6)
+sns.violinplot(x = 'fbs', y = 'output', data = heart)
+​
+plt.show()
+Data preprocessing
+There's no need for categorical encoding
+
+x = heart.iloc[:, 1:-1].values
+y = heart.iloc[:, -1].values
+x,y
+x = heart.drop('output',axis = 1)
+y = heart['output']
+Splitting the dataset into training and testing data
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size= 0.3, random_state= 0)
+print('Shape for training data', x_train.shape, y_train.shape)
+print('Shape for testing data', x_test.shape, y_test.shape)
+Feature Scaling
+
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+x_train,x_test
+1. Logistic Regression
+
+model = LogisticRegression()
+model.fit(x_train, y_train)
+​
+predicted_train = model.predict(x_train)
+predicted_test = model.predict(x_test)
+​
+conf = metrics.confusion_matrix(y_test, predicted_test)
+print ("Confusion Matrix : \n", conf)
+​
+print("The train accuracy of Logistic Regression model is : ", metrics.accuracy_score(y_train, predicted_train)*100, "%")
+print("The test accuracy of Logistic Regression model is : ", metrics.accuracy_score(y_test, predicted_test)*100, "%")
+print(metrics.classification_report(y_test,predicted_test))
+
+2.Bernoulli Naive Bayes
+
+model = BernoulliNB()
+model.fit(x_train, y_train)
+​
+predicted_train = model.predict(x_train)
+predicted_test = model.predict(x_test)
+​
+print("The train accuracy of Bernoulli Naive Bayes model is : ", metrics.accuracy_score(y_train, predicted_train)*100, "%")
+print("The test accuracy of Bernoulli Naive Bayes model is : ", metrics.accuracy_score(y_test, predicted_test)*100, "%")
+print(metrics.classification_report(y_test,predicted_test))
+
+3.Support Vector Machine
+
+model = SVC()
+model.fit(x_train, y_train)
+  
+predicted_train = model.predict(x_train)
+predicted_test = model.predict(x_test)
+​
+print("The train accuracy of SVM model is : ", metrics.accuracy_score(y_train, predicted_train)*100, "%")
+print("The test accuracy of SVM model is : ", metrics.accuracy_score(y_test, predicted_test)*100, "%")
+print(metrics.classification_report(y_test,predicted_test))
+4.Random Forest
+
+rfcl = RandomForestClassifier(n_estimators=100, random_state = 1)
+rfcl.fit(x_train, y_train)
+​
+rfcl_train_acc = rfcl.score(x_train,y_train) 
+print('Accuracy score for train data',rfcl_train_acc)
+​
+rfcl_test_acc = rfcl.score(x_test,y_test)
+print('Accuracy score for test data',rfcl_test_acc)
+predicted = rfcl.predict(x_test)
+print(metrics.classification_report(y_test,predicted))
+
+grid = { 'max_depth': [5,6,7,8],
+               'max_features': [4,5,6],
+               'min_samples_leaf': [10,15,20],
+               'min_samples_split': [50,60,70],
+               'n_estimators': [60,70,80]             
+             }
+
+rfcl = RandomForestClassifier()
+
+grid_search = GridSearchCV(estimator = rfcl, param_grid = grid, cv = 10, n_jobs=-1) #gridsearch with cv = 10
+grid_search.fit(x_train, y_train)
+print(grid_search.best_params_) #best parameters of logit for tuning
+
+best_grid = grid_search.best_estimator_ #acquiring the best estimator for logit
+print(best_grid)
+grid_rfcl_train_acc = best_grid.score(x_train,y_train) 
+print('Accuracy score for train data',grid_rfcl_train_acc)
+
+grid_rfcl_test_acc = best_grid.score(x_test,y_test)
+print('Accuracy score for test data',grid_rfcl_test_acc)
+grid_rfcl_pred = best_grid.predict(x_train) #prediction of the training set
+grid_rfcl_pred1 = best_grid.predict(x_test) #prediction of the test set
+
+grid_rfcl_prob = best_grid.predict_proba(x_train) #probability prediction of the training set
+grid_rfcl_prob1 = best_grid.predict_proba(x_test) #probability prediction of the test set
+plt.figure(figsize=(10,3))
+
+plt.subplot(1,2,1)
+sns.heatmap(metrics.confusion_matrix(y_train,grid_rfcl_pred),annot=True,fmt='d',cbar=False)
+plt.title('Confusion Matrix for Knn (Train)')
+plt.xlabel('Predicted Label')
+plt.ylabel('Actual Label')
+
+plt.subplot(1,2,2)
+sns.heatmap(metrics.confusion_matrix(y_test,grid_rfcl_pred1),annot=True,fmt='d',cbar=False)
+plt.title('Confusion Matrix for Knn (Test)')
+plt.xlabel('Predicted Label')
+plt.ylabel('Actual Label')
+plt.show()
+#classification report of training and test set
+​
+print('Classification Report for the training set\n\n',metrics.classification_report(y_train, grid_rfcl_pred),'\n')
+print('Classification Report for the test set\n\n',metrics.classification_report(y_test, grid_rfcl_pred1))
+5.K Nearest Neighbours
+
+model = KNeighborsClassifier(n_neighbors = 1)  
+model.fit(x_train, y_train)
+​
+predicted_train = model.predict(x_train)
+predicted_test = model.predict(x_test)
+​
+print(metrics.confusion_matrix(y_test, predicted_test))
+print("The train accuracy of KNN model is : ", metrics.accuracy_score(y_train, predicted_train)*100, "%")
+print("The test accuracy of KNN model is : ", metrics.accuracy_score(y_test, predicted_test)*100, "%")
+Optimizing the KNN
+
+error_rate = []
+  
+for i in range(1, 40):
+      
+    model = KNeighborsClassifier(n_neighbors = i)
+    model.fit(x_train, y_train)
+    pred_i = model.predict(x_test)
+    error_rate.append(np.mean(pred_i != y_test))
+  
+plt.figure(figsize =(10, 6))
+plt.plot(range(1, 40), error_rate, color ='blue',
+                linestyle ='dashed', marker ='o',
+         markerfacecolor ='red', markersize = 10)
+  
+plt.title('Error Rate vs. K Value')
+plt.xlabel('K')
+plt.ylabel('Error Rate')
+# Find the index with the minimum error rate
+best_i = np.argmin(error_rate) + 1  # Adding 1 to convert from 0-based index to 1-based index
+min_error_rate = error_rate[best_i - 1]  # Error rate corresponding to the best index
+
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 40), error_rate, color='blue', linestyle='dashed', marker='o', markerfacecolor='red', markersize=10)
+
+# Highlight the point with the minimum error rate
+plt.scatter(best_i, min_error_rate, color='green', marker='X', s=100, label=f'Best K = {best_i}')
+
+plt.title('Error Rate vs. K Value')
+plt.xlabel('K')
+plt.ylabel('Error Rate')
+plt.legend()
+plt.show()
+
+print(f"The best value for K is {best_i} with an error rate of {min_error_rate}")
+The best value for K is 3 with an error rate of 0.12087912087912088
+The error rate hovered after k=3
+
+model = KNeighborsClassifier(n_neighbors = 3)
+  
+model.fit(x_train, y_train)
+​
+predicted_train = model.predict(x_train)
+predicted_test = model.predict(x_test)
+​
+print(metrics.confusion_matrix(y_test, predicted_test))
+print("The train accuracy of KNN model is : ", metrics.accuracy_score(y_train, predicted_train)*100, "%")
+print("The test accuracy of KNN model is : ", metrics.accuracy_score(y_test, predicted_test)*100, "%")
+plt.figure(figsize=(10,3))
+
+plt.subplot(1,2,1)
+sns.heatmap(metrics.confusion_matrix(y_train, predicted_train),annot=True,fmt='d',cbar=False)
+plt.title('Confusion Matrix for knn (Train)')
+plt.xlabel('Predicted Label')
+plt.ylabel('Actual Label')
+
+plt.subplot(1,2,2)
+sns.heatmap(metrics.confusion_matrix(y_test, predicted_test),annot=True,fmt='d',cbar=False)
+plt.title('Confusion Matrix for knn (Test)')
+plt.xlabel('Predicted Label')
+plt.ylabel('Actual Label')
+plt.show()
+print(metrics.classification_report(y_test,predicted_test))
+# Calculate the probabilities for each class
+probs_train = model.predict_proba(x_train)
+probs_test = model.predict_proba(x_test)
+
+
+# Get the predicted probabilities for the positive class
+train_probabilities = model.predict_proba(x_train)[:, 1]
+test_probabilities = model.predict_proba(x_test)[:, 1]
+
+# Compute the false positive rate, true positive rate, and thresholds for the training set
+train_fpr, train_tpr, train_thresholds = metrics.roc_curve(y_train, train_probabilities)
+train_auc = metrics.auc(train_fpr, train_tpr)
+
+# Compute the false positive rate, true positive rate, and thresholds for the test set
+test_fpr, test_tpr, test_thresholds = metrics.roc_curve(y_test, test_probabilities)
+test_auc = metrics.auc(test_fpr, test_tpr)
+
+# Plot the ROC curve for the training set
+plt.figure(figsize=(16,6))
+plt.subplot(1,2,1)
+plt.plot(train_fpr, train_tpr, label='Train ROC curve (area = %0.2f)' % train_auc)
+plt.plot([0, 1], [0, 1], 'k--')  # Random guessing line
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC - Training Set')
+plt.legend(loc='lower right')
+
+# Plot the ROC curve for the test set
+plt.subplot(1,2,2)
+plt.plot(test_fpr, test_tpr, label='Test ROC curve (area = %0.2f)' % test_auc)
+plt.plot([0, 1], [0, 1], 'k--')  # Random guessing line
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC - Test Set')
+plt.legend(loc='lower right')
+
+plt.show()
+# Calculate the probabilities for each class
+probs_train = model.predict_proba(x_train)
+probs_test = model.predict_proba(x_test)
+
+
+# Get the predicted probabilities for the positive class
+train_probabilities = model.predict_proba(x_train)[:, 1]
+test_probabilities = model.predict_proba(x_test)[:, 1]
+
+# Compute the false positive rate, true positive rate, and thresholds for the training set
+train_fpr, train_tpr, train_thresholds = metrics.roc_curve(y_train, train_probabilities)
+train_auc = metrics.auc(train_fpr, train_tpr)
+
+# Compute the false positive rate, true positive rate, and thresholds for the test set
+test_fpr, test_tpr, test_thresholds = metrics.roc_curve(y_test, test_probabilities)
+test_auc = metrics.auc(test_fpr, test_tpr)
+
+# Plot the ROC curve for the training set
+plt.figure(figsize=(16,6))
+plt.subplot(1,2,1)
+plt.plot(train_fpr, train_tpr, label='Train ROC curve (area = %0.2f)' % train_auc)
+plt.plot([0, 1], [0, 1], 'k--')  # Random guessing line
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC - Training Set')
+plt.legend(loc='lower right')
+
+plt.show()
+CONCLUSION
+
+After conducting an extensive analysis and comparison of various machine learning algorithms on the heart disease dataset, we have determined that the K Nearest Neighbours (knn) model outperforms all other algorithms.
+Upon comparing the results, we found that the RF model consistently achieved the highest accuracy and F1-score, indicating its superior performance in correctly classifying instances of heart disease.

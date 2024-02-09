@@ -1,0 +1,81 @@
+Exploratory of Data Analysis(EDA) of Forbes Global companies
+# LIBRARY USED
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+#Reading the data
+data=pd.read_csv("Forbes_2000_top_company_CLNQ11.csv")
+data
+data.info()
+data.shape
+#Checking for any missing/null values in the data set
+data.isnull().sum()
+#How many countries are there in this forbes list ?
+data["Country"].nunique()
+#How many countries are there in this forbes list ?
+data["Country"].nunique()
+data.tail(5)
+data.head(5)
+data.describe()
+da=data.copy()
+da.duplicated().value_counts() #check any duplicate values in the data set
+#Which company got the highest revenue ?
+
+data.sort_values(by="Revenue (Billions)",ascending =False).head(5)
+mask=data["Country"]=="United States"# get only the boolean values
+mask
+data[mask] # By passing the mask into data we get only the united states Organisation alone
+#Which sector company is listed most in forbes 2000?
+plt.figure(figsize=(50,50))
+sns.countplot(x="Industry",data=data,order=data["Industry"].value_counts().index)#Visualising using the seabornlib(countplot)
+plt.xticks(rotation="vertical",fontsize=50)
+plt.yticks(fontsize=50)
+plt.title("Top Industries",fontsize=150)# Giving the title
+plt.xlabel("Industry",fontsize=80)# Labelling the x-axis
+plt.ylabel("Count",fontsize=80)# Labelling the y-axis
+plt.show()
+# Observation:The maximum company is from banking sector and the least is Automotive sector
+#Which company is top in generating the revenue ?
+r=data.sort_values(by="Revenue (Billions)",ascending = False)
+f=r.head(5)
+f
+plt.figure(figsize=(20,15))
+x=f["Organization Name"].value_counts().index
+y=f["Revenue (Billions)"]
+plt.bar(x,y,width=0.5,color="orange")# matplotlib bar graph is used for visualisation
+plt.title("Top Companies by Revenue",fontsize=50)
+plt.xlabel("Company Name",fontsize=30)# Labelling the x-axis
+plt.ylabel("Revenue Generated",fontsize=30)# Labelling the y-axis
+plt.xticks(fontsize=15,color='red')
+plt.yticks(fontsize=15,color="red")
+plt.show()
+#Observation : The Walmart is the top company which is generating the highest revenue
+#List the top 10 companies by their assets values
+k=data.sort_values(by="Assets (Billions)",ascending = False).head(10)
+k
+plt.figure(figsize=(150,150))
+sns.barplot(data=k,x="Organization Name",y="Assets (Billions)")
+sns.color_palette() #Note the color palette is used to show difference
+plt.xlabel("Organization Name",fontsize=180)# Labelling the x-axis
+plt.ylabel("Assets",fontsize=180) # Labelling the y-axis
+plt.title("Top 10 Assets company",fontsize=250)
+plt.xticks(rotation='vertical',fontsize=120)
+plt.yticks(fontsize=120)
+plt.show()
+data.groupby("Country").size() #grouping all the company in their respective country
+country=data.groupby("Country").size()
+country=country.to_frame()#we are converting the country data from series to dataframes
+country=country.rename(columns={0:'count'}) #changing the column values by its  count position  
+country=country.sort_values(by="count",ascending=False)
+cou=country
+cou
+#Which country has the highest list of companies in it?
+plt.figure(figsize=(15,15))
+sns.barplot(x=cou.index[:10],y=cou["count"][:10],palette="flare")# with the slicing selected top10 country
+plt.xlabel("Country",fontsize=20)# Labelling the y-axis
+plt.ylabel("count",fontsize=20)# Labelling the y-axis
+plt.title("Top Countries",fontsize=50)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=15)
+plt.show()

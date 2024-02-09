@@ -1,0 +1,128 @@
+I.	INTRODUCTION
+Our human body's operating system is the heart. A poorly functioning heart will also have an impact on other parts of the body. Cardiovascular disease is the term used to describe any condition that impairs the heart's capacity to function normally. The most common locations of occlusion or narrowing in coronary heart failure are the coronary arteries, which carry blood to the heart. According to estimates from the World Health Organization (WHO), 17.9 million people worldwide pass away each year from heart diseases, which account for 32% of all fatalities. This condition is also referred to as cardiovascular disease (CVD), and it is the leading cause of cardiovascular disease.
+      Recent medical research has identified risk factors for cardiovascular disease. Current research emphasizes the diagnosis of cardiovascular disease. Numerous variables that raise the risk of heart disease have been found in medical studies. The items are divided into two categories. Risk factors are those that can be changed irreversibly. Non- modifiable factors include family history, sex, and age while only lifestyle-related factors such as smoking, hypertension, high cholesterol, and lack of physical activity can be modified to prevent risks later in life in some cases medication and lifestyle changes may occur.
+      The main challenge facing the health sector is quality service at affordable prices. To provide quality services at competitive prices, patients must be accurately diagnosed with effective doses. Clinical diagnostic and treatment errors can produce unfavourable and inappropriate outcomes. The use of DSS (decision support systems) or computerized information systems might be one way to save costs in healthcare systems.
+      Categorization and prediction are key approaches to data analysis. To categorize particular random data values, classification models are helpful. Predictive models, however, assist in categorizing anticipated patterns. The search results will subsequently be used to provide a web/mobile application to the users. For illness diagnosis, several Data Mining and Hybrid Machine Learning classification approaches have been implemented. KNN, Naive Bayes, Random Forests, Neural Networks, Logistic Regression Feature Selection Algorithms.
+      In this study, we used the Heart Attack Analysis & Prediction Dataset to investigate classification methods for heart attack prediction. These techniques use a variety of Machine Learning algorithms, including Gradient growth, KNN, Naive Bayes, Decision trees, Logistic Regression, Support Vector Machines, and Random forests.
+      They use the best available estimators for optimal - Performance and predictive accuracy and evaluate any methods are ensured by harnessing the power of data pre-processing, visualization, and advanced classification techniques, we aim to enhance our understanding of heart failure and develop more effective predictive models. The results of this study may help to support healthcare professionals, researchers, and policymakers in making informed decisions about early detection and prevention strategies and, ultimately, patient outcomes have improved and reduced the burden of cardiovascular disease.
+III.	METHODOLOGY
+A.	Dataset Description
+The chance of developing heart disease can be reduced by early detection and treatment. This section presents the suggested method for heart attack analysis and detection. The Cleveland heart disease dataset is used which is accessible online at the UCI machine learning repository.
+The dataset's data values are pre-processed before being subjected to the feature selection and classification processes.
+The dataset includes 303 patients. The dataset has 13 number attributes, and the fourteenth attribute is a binary label that was employed in this investigation, with label value 0 indicating no heart disease and label value 1 indicating heart disease is present. This dataset is intriguing since it contains actual patient data and has been extensively used to test various data mining algorithms. We may utilize this data for one or more data mining algorithms, to build profiles for distinguishing persons with heart illness from those who do not have known cardiac issues.
+•	Age=X1: Age in years.
+•	Sex=X2: Patient gender.
+•	Type=X3: Not ang=Nonanginal pain.
+•	Blood Pressure=X4: Resting blood pressure at hospital admission.
+•	Cholesterol=X5: Serum cholesterol.
+•	Fasting Blood Sugar 120 =X6 Is your fasting blood sugar less than 120?
+•	Resting ECG=X7: Hyp=Left ventricular hypertrophy.
+•	Maximum Heart Rate=X8: Maximum heart rate attained.
+•	Exercise-Induced Angina=X9: Does the patient have angina as a result of exercise?
+•	Old Peak=X10: ST depression caused by activity compared to rest.
+•	Slope=X11: Slope of the peak workout ST segment.
+•	Number of Coloured Vessels=X12: The number of main vessels coloured by fluoroscopy.
+•	Thal=X13: Normal, fixed fault, reversible detection.
+•	Concept Class=X14: angiographic disease state
+B.	Formulation of the problem and proposed solution
+	The basic objective of a predictive model in machine learning is to produce a hypothesis by applying a learning algorithm to the train data. In other words, the model picks up a fitting function by seeing how the training data behave. The theory is created by decreasing the error that is attained throughout all training cases.
+The data set was randomly divided into two subsets, with 70% of the data going to the training set and 30% to the validation set, before models were built. The analysis involved the use of different methods, such as univariate and bivariate analyses, as well as multivariate visualizations like pair plots and heatmaps. To scale the features, the standard scaler function was utilized. To predict cardiac disease, we employed five classification models in this work.
+ 
+Fig 1. Flowchart of the Methodology
+
+1.	Logistic Regression algorithm
+The logistic regression algorithm estimates the likelihood of a binary result (usually represented as 0 or 1) based on one or more predictor variables. The logistic regression equation is derived from the logistic function, which is a sigmoid curve that maps any real number to a value ranging from 0 to 1.
+The logistic regression equation for a single predictor variable is:
+
+ 
+In this equation: - P(Y=1) represents the probability of the outcome being 1. X1 denotes the value of the predictor variable. β0 is the intercept. β1 is the coefficient associated with the predictor variable.
+For multiple predictor variables, the equation is expanded as follows:
+ 
+Here, X1,X2,…,Xk represent the values of the predictor variables, and β0,β1,…,βk are the intercept and coefficients associated with each predictor variable.
+The logistic regression model is trained to determine the optimal values for β0,β1,…,βk that maximize the likelihood of the observed data.
+During the training process, the algorithm adjusts these coefficients to minimize the disparity between the predicted probabilities and the actual outcomes. This is typically achieved using a technique known as maximum likelihood estimation.
+The logistic function guarantees that the predicted probabilities always fall within the range of 0 and 1, making it suitable for modelling probabilities in a binary classification scenario.
+
+2.	Bernoulli Naïve Bayes formula
+		  A probabilistic classifier based on the idea of applying Bayes' theorem under the presumption of feature independence is known as the Bernoulli Naive Bayes algorithm. It was created especially for binary features or characteristics, where each feature might have a value of either 0 or 1.
+The formula used in Bernoulli Naive Bayes is:
+ Where:
+P(class | features): The posterior probability of the class given the features  i.e., the chance of the class label being true (1) or false (0) given the feature values.
+P(class): The prior probability of the class, which indicates the likelihood of each class existing in the dataset.
+P(features | class): The likelihood of the features given the class, which reflects the chance of witnessing the feature values given each class.
+P(features): The probability of the features, which works as a normalization constant and may be computed as the sum of the individual probabilities for each class.
+The classifier determines the posterior probability for each class label and chooses the class with the highest probability as the projected class to categorize a new occurrence.
+
+3.	 Support Vector Machine (SVM)
+	Support Vector Machines is a binary linear classifier that is not probabilistic. The goal is to identify the maximum-margin hyperplane that splits the points with yi = 1 and yi = -1 for a training set of points (xi, yi), where x refers to feature vector and y to the class.
+The hyperplane equation is as follows:
+			w.x - b = 0
+Where w refers to the hyperplane's normal vector and b is the offset. To maximize the margin (Distance of nearest instances from hyperplane), represented by, do the following:
+
+	SVM classifier is provided in sklearn. The C term is set at 0.1. The penalty parameter of the error term is referred to as C. In other words, this impacts the misclassification of the goal function.
+
+4.	Random Forest
+Random Forest is a classification and regression learning method that gathers information. Random Forest generates a large number of decision tree models based on the overall decision of those generated trees. While there is no one mathematical formula that defines a Random Forest, the basic ideas entail employing randomization and ensemble approaches to prevent overfitting and increase forecast accuracy. To create reliable predictions, the algorithm employs the notion of decision trees and their aggregations.
+The initial step involved creating a Random Forest model with 100 estimators, without any modifications to the hyperparameters. The model achieved training and testing accuracies of 100% and 82% respectively. These accuracies indicate that the model was fitting too closely to the training data. To address this issue, hyperparameter tuning was conducted using grid search. The optimized parameters that were obtained included max_depth: 7, max_features: 4, min_samples_leaf: 10, min_samples_split: 60, and n_estimators: 60. After tuning the parameters, the model demonstrated reduced overfitting and improved accuracies of 86% for training and 81% for testing.
+
+5.	K Nearest Neighbor
+KNN is a supervised machine-learning technique and a highly effective method of classification. It does not rely on any assumptions about the data and is particularly useful for classification tasks where there is limited or no prior knowledge of the data distribution. This algorithm finds the k nearest data points in the training set to a given data point without a target value. It then assigns the average value of these neighbors to the given data point. 
+Initially, when the number of neighbors was set to 1, the algorithm overfit the training data, resulting in training and testing accuracies of 100% and 81% respectively. To improve the model, an optimization process was initiated to determine the ideal value for k. A for loop was used to iterate through different values of k, and the error rate was recorded for each iteration. The optimal value of k was found to be 3, and this value was used for the improved model. As a result, the training and testing accuracies increased to 86% and 88% respectively.
+IV.	RESULT AND DISCUSSION
+
+The performance metrics for the machine learning models on the test dataset are shown in Table II, offering insight into their performance throughout the training phase.
+
+
+TABLE II.
+A COMPARISON OF TEST SET MODEL PERFORMANCE
+
+Method	Acc%	Recall	Precision	F1 score	Support
+Logistic Regression	82.4	0.89	0.79	0.84	46
+Bernoulli Naïve
+Bayes	81.3	0.85	0.80	0.82	46
+Support
+Vector Machine	83.5	0.91	0.79	0.85	46
+Random Forest	83.5	0.87	0.82	0.84	46
+K Nearest Neighbors	87.9	0.91	0.86	0.88	46
+
+The accuracy of the logistic regression model is 82.4%, which means it predicts the target variable accurately in 82.4% of situations. With a recall value of 0.89, the model accurately detects 89% of positive events. With a precision of 0.79, the model is right 79% of the time when it predicts a positive case. The F1 score is 0.84, which combines accuracy and recall. The support value (in this case, 46) reflects the number of cases in the dataset that correspond to the class being predicted.
+The Bernoulli Naive Bayes model has 81.3% accuracy, 0.85 recall, 0.80 precision, and 0.82 F1 score. Accordingly, the model successfully recognized 85% of the positive data points, correctly categorized 80% of the data points that were correctly classified as positive and had an overall performance of 82%. It also correctly classified 81.3% of the data points. The model received 46 data points as support, indicating that the model was evaluated using 46 data points.
+The SVM model has a slightly greater accuracy of 83.5% than the previous two models. The recall, precision, and F1 score values are 0.91, 0.79 and 0.85, indicating consistent performance in correctly identifying positive instances.
+The Random Forest method yields 83.5% accuracy, which is comparable to the prior models. The model's 0.87 recall shows it captures most positive instances in the dataset. It also predicts positive instances correctly 0.82 of the time. The F1 score, at 0.84, indicates the model combines precision and recall effectively.
+The KNN algorithm achieves the highest accuracy among all the models with 87.9%. It also exhibits the highest precision value of 0.86, suggesting a better ability to make correct positive predictions. The recall value of 0.91 indicates a high ability to identify positive instances, similar to Random Forest. The F1 score of 0.88 is also relatively high, indicating a balanced performance between precision and recall.
+Best Model: Among the classification algorithms shown, k-nearest Neighbours (KNN) perform the best. It has a high accuracy of 87.9%, a precision of 0.86, and a moderately high F1 score of 0.88. Additionally, KNN demonstrates a high recall value of 0.91, indicating its ability to effectively identify positive instances. Therefore, depending on the provided performance metrics, KNN appears to be the best-fitting model among the listed options.
+The suggested five-categorization model for predicting heart disease is validated using Python, data visualization, and graphs. The performance of all five classes is assessed using established methodologies for a variety of performance indicators.
+A heat map depicting the association between each attribute is presented below:
+ 
+Figure 2: A Heatmap illustrating the correlation among individual attributes.
+ 
+Figure 3: ROC curve for training dataset.
+
+
+
+
+
+
+
+
+
+
+
+Figure 4: ROC curve for test dataset.
+The data presented shows how well a classification model based on ROC curve analysis is performed. The model was trained using a labelled dataset, and so discovered the training set's AUC was 0.95. This high AUC suggests that the model achieved excellent discriminatory power and accurately distinguished between positive and negative instances within the training data.
+     Next, the trained model was tested on an independent test dataset, and the resulting ROC curve yielded an AUC of 0.90. This result nevertheless shows a high capacity of the model to distinguish between positive and negative occurrences in unknown data, although it is somewhat lower than the training set's AUC. The AUC of the test set suggests that the model generalizes well and can be relied upon to perform effectively in real-world scenarios.
+The classification model performed remarkably, with AUC values of 0.95 on the training set and 0.90 on the test set. These findings highlight the model's strong discriminatory power and generalization capability, supporting its practical application in various domains.
+
+ Figure 5: Confusion Matrix.
+
+ 
+Figure 6: Confusion Matrix for the training dataset.
+ 
+Figure 7: Confusion Matrix for the test dataset.
+
+A confusion matrix is used to divide predictions into four categories: true positives, true negatives, false positives, and false negatives. This matrix organizes these outcomes well, offering a clear and comprehensive summary of the model's prediction performance as well as its ability to correctly identify positive and negative situations.
+The model accurately identified 104 cases as positive (true positives) and 78 instances as negative (true negatives) in the training dataset. False negatives were 15 cases where it misclassified them as positive when they were negative, and false positives were 14 occasions where it misclassified them as negative when, they were positive.
+In the test dataset, the model achieved 38 true negative predictions and 42 true positive predictions. It made 4 false negative predictions and 7 false positive predictions.
+V.	CONCLUSION
+The performance of classification across the five data mining classification strategies is compared in this research. Five categorization models' abilities to foretell the chance of a heart attack were compared. Support Vector Machine, Random Forest, K Nearest Neighbors, Bernoulli Naive Bayes, Logistic Regression, and are some of the models that were examined. The results of the test data demonstrate that all models achieved similar accuracy scores, with Logistic Regression and Bernoulli Naive Bayes obtaining accuracies of 82.4% and 81.3% respectively, SVM and Random Forest achieving accuracies of 83.5%. However, the KNN method has performed the best with the highest accuracy of 87.9. Also, when considering recall, which measures the models' ability to correctly identify positive instances, SVM, Random Forest, and KNN performed the best with a recall of 0.91. These findings highlight the potential of machine learning algorithms in predicting heart attacks. To determine these models' generalizability and robustness, more research and validation on bigger and more varied datasets are required. Some markers that can be used as accurate predictors of the presence of heart disease include age, sex, the kind of chest pain, blood pressure, cholesterol, fasting blood sugar, the maximum heart rate, provoked angina, the old peak, the slope, the number of coloured vessels, and the thallium stress test. Due to several issues with our study, including the lack of risk factor input variables such as exercise behaviour, lipoprotein, hyperuricemia, and homocysteinemia, none of the models were highly accurate.
+In our work, we promote the use of high-performance modelling methods for efficient data handling and exploration. In the future, to enhance cardiac disease prediction and get a deeper knowledge of the crucial aspects, new feature selection strategies can be developed.

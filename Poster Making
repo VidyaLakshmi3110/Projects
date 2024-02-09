@@ -1,0 +1,115 @@
+DATA WRANGLING
+import requests
+
+url = 'https://www.flipkart.com/search?q=mobiles&as=on&as-show=on&otracker=AS_Query_TrendingAutoSuggest_1_0_na_na_na&otracker1=AS_Query_TrendingAutoSuggest_1_0_na_na_na&as-pos=1&as-type=TRENDING&suggestionId=mobiles&requestId=79be507c-d49b-4dd2-99c2-a0f93c9d2575'
+response = requests.get(url)
+
+if response.status_code == 200:
+    print(f"The website {url} is accessible.")
+else:
+    print(f"The website {url} returned an error: {response.status_code}")
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+import pandas as pd
+
+# Initialize the Chrome WebDriver
+driver = webdriver.Chrome()
+
+# Define the base URL
+base_url = "https://www.flipkart.com/search?q=mobiles&otracker=search&otracker1=search&marketplace=FLIPKART&page={}"
+
+# Create an empty list to store the data
+product_list = []
+
+# Loop through the pages
+for page in range(1, 16):  # Change the range to scrape more or fewer pages
+    url = base_url.format(page)
+    driver.get(url)
+
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+    products = soup.find_all('a', {'class': '_1fQZEK'})
+
+    for product in products:
+        name = product.find('div', {'class': '_4rR01T'}).text.strip()
+
+        # Check if the price element is found
+        price_element = product.find('div', {'class': '_30jeq3 _1_WHN1'})
+        if price_element:
+            price = price_element.text.strip()
+        else:
+            price = None
+
+        rating = product.find('div', {'class': '_3LWZlK'})
+        if rating:
+            rating = rating.text.strip()
+        else:
+            rating = None
+
+        # Extract details like color, GB, and other specifications from the product name
+        details = name.split('(')[-1].strip(')')
+
+        # Check if details contain a comma before splitting
+        if ',' in details:
+            color, specs = details.split(',')
+            gb, _, _, _ = specs.split('+') if "+" in specs else (specs.split('+') + [None] * 3)
+        else:
+            color = details
+            gb = None
+
+        # Get only the product name without details in parentheses
+        product_name = name.split('(')[0].strip()
+
+        # Extract additional specifications
+        specs = product.find('ul', {'class': '_1xgFaf'})
+        if specs:
+            processor = specs.find('li').text.strip()
+            display = specs.find_all('li')[1].text.strip()
+            rear_camera = specs.find_all('li')[2].text.strip()
+            battery = specs.find_all('li')[3].text.strip()
+            warranty = specs.find_all('li')[-1].text.strip()
+        else:
+            processor = None
+            display = None
+            rear_camera = None
+            battery = None
+            warranty = None
+
+        product_list.append([product_name, color, gb, price, rating, processor, display, rear_camera, battery, warranty])
+
+# Create a pandas DataFrame
+df = pd.DataFrame(product_list, columns=['Product Name', 'Color', 'GB', 'Price', 'Rating', 'Processor', 'Display', 'Rear Camera', 'Battery', 'Warranty'])
+
+# Print the DataFrame in tabular format without the index
+print(df.to_string(index=False))
+
+# Close the WebDriver
+driver.quit()
+df.to_csv('products.csv', index=False)
+df
+df.head()
+df['Display'] = df['Display'].str.extract(r'(\d+\.\d+)');
+df["Warranty"].replace({"No care warranty":"0" , "NO Warranty":"0" , "no warranty" : "0" ,"One Year manufacturer Warranty":"1" , '12': '1' , "Domestic Warranty of 12 months on phone & 6 months on accessories" : "1", "Domestic 1 Year on Handset and 6 Months on Accessories" : "1" , "Brand Warranty for 1 Year" : "1" , "NO WARRANTY" : "0" , },inplace=True)
+df['Warranty'] = df['Warranty'].str.extract(r'(\d+)')
+
+# Replace specific values in the "Warranty_Duration" column
+df['Warranty'].replace({'12': '1'}, inplace=True)
+df
+df.value_counts("GB")
+df.value_counts("Warranty")
+df.info()
+df.value_counts("GB")
+df.duplicated().sum()
+
+df = df.drop_duplicates()
+df.duplicated().sum()
+df.info()
+import sys
+!{sys.executable} -m pip install -U ydata-profiling[notebook]
+!jupyter nbextension enable --py widgetsnbextension
+from ydata_profiling import ProfileReport
+!pip install --upgrade wordcloud
+profile = ProfileReport(df, title="Profiling Report")
+profile
+df.describe()
